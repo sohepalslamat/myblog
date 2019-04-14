@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <title>Add Article | MyBlog</title>
+</head>
+<body>
+
+<header>
+        <h1>MyBlog</h1>
+</header>
+<main id="add-section">
+<form action="{{url_for('add_article')}}" method="POST" >
+    <div>
+        <label>Title:</label>
+        <input type="text" name="title" value="">
+    </div>
+    <div>
+        <label>Photo URL:</label>
+        <input type="text" name="photo_url" value="">
+    </div>
+    <div>
+        <label>Author Name:</label>
+        <input type="text" name="author_name" value="">
+    </div>
+    <div>
+        <label>Body:</label>
+        <textarea name="body" cols="40" rows="5"></textarea>
+    </div>
+    <div>
+                <button>Create</button>
+    </div>
+</form>
+</main>
+</body>
+</html>
