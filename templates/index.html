@@ -7,23 +7,15 @@
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,600" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
-    <style>
-        #body-post p a {
-            color : black;
-            text-decoration: none;
-        }
-        #body-post h2 a {
-            color : green;
-            text-decoration: none;
-        }
-    </style>
+
     <title>MyBlog</title>
 </head>
 <body>
 <header>
-    <h1>MyBlog</h1>
+    <h1><a href="/">MyBlog</a></h1>
     <nav>
-        <a href="{{url_for('add_article')}}">New</a>
+        <a href="{{url_for('add_article')}}">New Article</a>
+        <a href="{{url_for('add_author')}}" >New Author</a>
     </nav>
 </header>
 <main>
@@ -37,12 +29,13 @@
         <div id="body-post">
 
             <h2><a  href="/">{{article.title}}</a></h2>
-            <p><a href="/">{{article.author.name}}</a>  <em style="margin-left: 7em;">{{article.date_time}}</em></p>
+            <p><a href="/">{{article.author.name}}</a>  </p>
+            <p><em style="margin-left: 12em;">{{article.date_time}}</em></p>
 
 
             <div class="btn-section">
-                <a href="">Edit</a> |
-                <a href="">Delete</a>
+                <a href="{{url_for('update_article',id = article.id)}}">Edit</a> |
+                <a href="{{url_for('delete_article',id = article.id)}}">Delete</a>
             </div>
 
         </div>

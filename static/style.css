@@ -15,14 +15,19 @@ header {
     align-items: center;
 }
 
-header h1 {
+header h1 a:link, h1 a:hover, h1 a:visited  {
     color: #565656;
+    text-decoration: none;
+}
+header h2 {
+    color: rgb(192, 61, 61);
 }
 
-header a {
-    display: block;
+header nav a {
     text-decoration: none;
     background-color: #1da1f2;
+    padding: 10px;
+    margin:5px;
     width: 100px;
     text-align: center;
     line-height: 40px;
@@ -31,7 +36,7 @@ header a {
     transition: background-color ease-in-out 0.3s;
 }
 
-header a:hover {
+header nav a:hover {
     background-color: #1995e1;
 }
 
@@ -53,7 +58,8 @@ main label{
 }
 
 main input,
-main textarea {
+main textarea,
+ main select{
     font-size: 16px;
     padding: 10px;
     background-color: #fdfdfd;
@@ -126,7 +132,11 @@ article p {
 #add-section{
     padding: 40px;
 }
-#body-post p a:link{
-  color: green;
-  text-decoration: none;
-}
+#body-post p a {
+            color : black;
+            text-decoration: none;
+        }
+#body-post h2 a {
+            color : green;
+            text-decoration: none;
+        }

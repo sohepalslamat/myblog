@@ -65,8 +65,8 @@ class operations:
     ############
 
     def add_article(self, title , photo_url='https://sandbox-uploads.imgix.net/u/1555162859-11025120fb71ec169dadf040509941ea?w=600',
-                    author_name='' , body=''):
-        author = self.get_author_by_name(author_name).id
+                    author=None , body=''):
+
         Articles.create(title=title,photo_url=photo_url,author=author,body=body)
         dtb.commit()
 
@@ -84,3 +84,8 @@ class operations:
     def update_article(self,id,title, photo_url, body):
         query = Articles.update(title = title,photo_url=photo_url,body=body,date_time_edit= strftime('%Y-%m-%d %H:%M:%S')).where(Articles.id==id)
         query.execute()
+
+    def delete_article(self,id):
+        Articles.delete_by_id(id)
+
+

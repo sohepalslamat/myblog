@@ -8,39 +8,37 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,600" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
 
-    <title>Add Article | MyBlog</title>
+    <title>Update Article | MyBlog</title>
 </head>
 <body>
 
 <header>
         <h1><a href="/">MyBlog</a></h1>
-        <h2>New Article</h2>
+        <h2>Update Article</h2>
 </header>
 <main id="add-section">
-<form id="add_article" action="{{url_for('add_article')}}" method="POST" >
+<form id="add_article" action="{{url_for('update_article',id=article.id)}}" method="POST" >
     <div>
         <label>Title:</label>
-        <input type="text" name="title" value="">
+        <input type="text" name="title" value="{{article.title}}">
     </div>
     <div>
         <label>Photo URL:</label>
-        <input type="text" name="photo_url" value="">
+        <input type="text" name="photo_url" value="{{article.photo_url}}">
     </div>
     <div>
         <label>Author Name:</label>
-        <select name="author" form="add_article" >
-            {% for author in authors %}
-            <option  value="{{author.id}}">{{author.name}}</option>
-            {% endfor %}
+        <select name="author" form="add_article"  >
+            <option value="" selected>{{article.author.name}}</option>
 
         </select>
     </div>
     <div>
         <label>Body:</label>
-        <textarea name="body" cols="40" rows="5"></textarea>
+        <textarea name="body" cols="40" rows="5" >{{article.body}}</textarea>
     </div>
     <div>
-                <button>Create</button>
+                <button>Update</button>
     </div>
 </form>
 </main>
