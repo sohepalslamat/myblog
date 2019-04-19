@@ -19,18 +19,19 @@
     </nav>
 </header>
 <main>
+    <div id="name_and_img" >
+            <img src='{{author.photo_url}}'>
+            <h2><a href="{{url_for('show_articles_by_author',author=author.name)}}">{{author.name}}</a>  </h2>
+
+    </div>
 
     {% for article in articles %}
     <article>
-        <div>
-            <img src='{{article.author.photo_url}}'>
 
-        </div>
         <div id="body-post">
 
             <h2><a  href="{{url_for('show_article',id = article.id,author=article.author.name)}}">{{article.title}}</a></h2>
-            <p><a href="{{url_for('show_articles_by_author',author=article.author.name)}}">{{article.author.name}}</a>  </p>
-            <p><em style="margin-left: 12em;">{{article.date_time}}</em></p>
+            <p><em>{{article.date_time}}</em></p>
 
 
             <div class="btn-section">

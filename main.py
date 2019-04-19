@@ -1,3 +1,5 @@
+from shutil import copy, copyfile
+
 from flask import Flask,render_template,request,url_for,redirect
 from models import operations
 app = Flask(__name__)
@@ -12,7 +14,7 @@ def home():
 @app.route('/articles/add',methods=['GET','POST'])
 def add_article():
     if request.method == 'POST':
-        o.add_article(request.form['title'],request.form['photo_url'],request.form['author'],
+        o.add_article(request.form['title'],request.form['author'],
                       request.form['body'])
         return redirect(url_for('home'))
     elif request.method == 'GET':
@@ -22,8 +24,10 @@ def add_article():
 @app.route('/authors/add',methods=['GET','POST'])
 def add_author():
     if request.method == 'POST':
-        o.add_author(request.form['name'],request.form['inf'],request.form['photo_url'],request.form['photo_back_url'],
-                     request.form['saying'],request.form['facebook'],request.form['twitter'])
+        o.add_author(name=request.form['name'],inf=request.form['inf'],saying=request.form['saying'],
+                     facebook=request.form['facebook'],twitter=request.form['twitter'])
+        print(request.files['photo_url'])
+        #copyfile(request.files['photo_url'][1],'/images/11')
         return redirect(url_for('home'))
     elif request.method == 'GET':
         return render_template('add_author.html')
@@ -36,12 +40,23 @@ def delete_article(id):
 @app.route('/articles/update/<int:id>',methods=['GET','POST'])
 def update_article(id):
     if request.method == 'POST':
-        o.update_article(id,title=request.form['title'],photo_url=request.form['photo_url'],
+        o.update_article(id,title=request.form['title'],
                          body=request.form['body'])
         return redirect(url_for('home'))
     elif request.method == 'GET':
         context= o.get_article_by_id(id)
         return render_template('update_article.html',article = context)
+
+@app.route('/articles/<string:author>/<int:id>')
+def show_article(id,author):
+    context = o.get_article_by_id(id)
+    return render_template('show_article.html',article = context)
+
+@app.route('/authors/<string:author>/articles')
+def show_articles_by_author(author):
+    this_author = o.get_author_by_name(author)
+    articles = o.get_articles_by_author(author)
+    return render_template('show_articles_by_author.html',articles = articles,author=this_author)
 
 
 
