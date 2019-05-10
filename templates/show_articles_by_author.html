@@ -16,12 +16,13 @@
     <nav>
         <a href="{{url_for('add_article')}}">New Article</a>
         <a href="{{url_for('add_author')}}" >New Author</a>
+        <a href="{{url_for('update_author',id = author.id)}}" >Update Author</a>
     </nav>
 </header>
 <main>
     <div id="name_and_img" >
-            <img src='{{author.photo_url}}'>
-            <h2><a href="{{url_for('show_articles_by_author',author=author.name)}}">{{author.name}}</a>  </h2>
+            <img src='/{{author.photo.url}}'>
+            <h2><a href="{{url_for('show_articles_by_author',id=author.id)}}">{{author.name}}</a>  </h2>
 
     </div>
 
@@ -30,8 +31,8 @@
 
         <div id="body-post">
 
-            <h2><a  href="{{url_for('show_article',id = article.id,author=article.author.name)}}">{{article.title}}</a></h2>
-            <p><em>{{article.date_time}}</em></p>
+            <h2><a  href="{{url_for('show_article',id = article.id,author=author.name)}}">{{article.title}}</a></h2>
+            <p><em>{{article.date_time.strftime("%A, %d %B %Y %I:%M:%S %p")}}</em></p>
 
 
             <div class="btn-section">

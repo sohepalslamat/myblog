@@ -22,19 +22,19 @@
 
     <article>
         <div>
-            <img src='{{article.author.photo_url}}'>
+            <img src='/{{article.author.photo.url}}'>
 
         </div>
         <div id="body-post">
 
             <h2>{{article.title}}</h2>
-            <p><a href="{{url_for('show_articles_by_author',author=article.author.name)}}">
+            <p><a href="{{url_for('show_articles_by_author',id=article.author.id)}}">
                 {{article.author.name}}</a>  </p>
 
             <hr>
             <p>{{article.body}}</p>
             <hr>
-            <p><em style="margin-left: 12em;">{{article.date_time}}</em></p>
+            <p><em style="margin-left: 9em;">{{article.date_time.strftime("%A, %d %B %Y %I:%M:%S %p")}}</em></p>
             <div class="btn-section">
                 <a href="{{url_for('update_article',id = article.id)}}">Edit</a> |
                 <a href="{{url_for('delete_article',id = article.id)}}">Delete</a>
