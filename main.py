@@ -1,15 +1,13 @@
 from datetime import datetime
 from random import randrange
-from os import path, listdir, stat, remove
+from os import path, listdir, remove
 from flask import Flask, render_template, request, url_for, redirect
 from werkzeug.utils import secure_filename
-#from models import operations, Articles, Authors
 from flask_sqlalchemy import SQLAlchemy
 
-
-
+####################### SETTING ########################
 UPLOAD_FOLDER = 'static/images/authors'
-ALLOWED_EXTENSIONS = set([ 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = (['pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///arzaq.db'
@@ -18,30 +16,33 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db = SQLAlchemy(app)
 
 
+###########################################################################
 
-
+############################## MODELS #####################################
 class Authors(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50),nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     inf = db.Column(db.Text)
-    #photo_back_url = db.Column(db.Text)
+    # photo_back_url = db.Column(db.Text)
     saying = db.Column(db.Text)
     facebook = db.Column(db.Text)
     twitter = db.Column(db.Text)
-    articles = db.relationship('Articles',backref='author')
+    articles = db.relationship('Articles', backref='author')
     photo_id = db.Column(db.Integer, db.ForeignKey('photos.id'))
+
 
 class Articles(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.Text,nullable=False)
-    #photo_url = db.Column(db.Text)
+    title = db.Column(db.Text, nullable=False)
+    # photo_url = db.Column(db.Text)
     author_id = db.Column(db.Integer, db.ForeignKey('authors.id'),
                           nullable=False)
-    #date_time = db.Column(db.DateTime(timezone=True), server_default=func.now())
-    #date_time_edit = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    # date_time = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    # date_time_edit = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     date_time = db.Column(db.DateTime(timezone=True), default=datetime.now())
     date_time_edit = db.Column(db.DateTime(timezone=True), onupdate=datetime.now())
     body = db.Column(db.Text)
+
 
 class Photos(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -51,11 +52,14 @@ class Photos(db.Model):
 
 db.create_all()
 
-class operations():
 
-    def add_author(self, name, inf='', saying='', facebook='', twitter='',photo_id=None):
+class operations():
+    # This operations which control the tables
+
+    # AUTHORS
+    def add_author(self, name, inf='', saying='', facebook='', twitter='', photo_id=None):
         author = Authors(name=name, inf=inf, saying=saying,
-                         facebook=facebook, twitter=twitter,photo_id=photo_id)
+                         facebook=facebook, twitter=twitter, photo_id=photo_id)
         db.session.add(author)
         db.session.commit()
         return author.id
@@ -78,10 +82,7 @@ class operations():
         author.twitter = twitter
         db.session.commit()
 
-
-
-    ######
-
+    # ARTICLES
     def add_article(self, title, author=None, body=''):
         db.session.add(Articles(title=title, author_id=author, body=body))
         db.session.commit()
@@ -93,7 +94,7 @@ class operations():
         return Articles.query.filter(Articles.author_id == id).all()
 
     def get_all_articles(self):
-        x=Articles.query.order_by(Articles.date_time.desc()).all()
+        x = Articles.query.order_by(Articles.date_time.desc()).all()
         return x
 
     def update_article(self, id, title, body):
@@ -102,11 +103,11 @@ class operations():
         articles.body = body
         db.session.commit()
 
-    def delete_article(self,id):
+    def delete_article(self, id):
         Articles.query.filter_by(id=id).delete()
         db.session.commit()
 
-    ###############
+    # PHOTOS
     def add_photo(self, url):
         photo = Photos(url=url)
         db.session.add(photo)
@@ -123,28 +124,16 @@ class operations():
         db.session.commit()
 
 
-o = operations()
 ######################################################################################
 
-@app.route('/')
-def home():
-    context = o.get_all_articles()
-    return render_template('index.html', articles=context)
+o = operations()
 
 
-@app.route('/articles/add', methods=['GET', 'POST'])
-def add_article():
-    if request.method == 'POST':
-        o.add_article(request.form['title'], request.form['author'],
-                      request.form['body'])
-        return redirect(url_for('home'))
-    elif request.method == 'GET':
-        context = o.get_all_author()
-        return render_template('add_article.html', authors=context)
-
+################################# FUNCTIONS ############################################
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def upload_file():
     if request.method == 'POST':
@@ -162,26 +151,28 @@ def upload_file():
             name_file = str(z) + file.filename
         if file and allowed_file(file.filename):
             file.filename = name_file
-            name_file=secure_filename(file.filename)
+            name_file = secure_filename(file.filename)
             file.save(path.join(app.config['UPLOAD_FOLDER'], name_file))
-            return app.config['UPLOAD_FOLDER']+'/'+name_file
+            return app.config['UPLOAD_FOLDER'] + '/' + name_file
+#########################################################################
 
 
+############################# VIEWS #####################################
+@app.route('/')
+def home():
+    context = o.get_all_articles()
+    return render_template('index.html', articles=context)
 
-@app.route('/authors/add', methods=['GET', 'POST'])
-def add_author():
+############## articles ###################
+@app.route('/articles/add', methods=['GET', 'POST'])
+def add_article():
     if request.method == 'POST':
-        try:
-            url_photo = upload_file()
-            photo_id = o.add_photo(url=url_photo)
-            o.add_author(name=request.form['name'], inf=request.form['inf'], saying=request.form['saying'],
-                         facebook=request.form['facebook'], twitter=request.form['twitter'],photo_id=photo_id)
-            return redirect(url_for('home'))
-        except:
-            return redirect(request.url)
-
+        o.add_article(request.form['title'], request.form['author'],
+                      request.form['body'])
+        return redirect(url_for('home'))
     elif request.method == 'GET':
-        return render_template('add_author.html')
+        context = o.get_all_author()
+        return render_template('add_article.html', authors=context)
 
 
 @app.route('/articles/delete/<int:id>')
@@ -214,6 +205,21 @@ def show_articles_by_author(id):
     return render_template('show_articles_by_author.html', articles=articles, author=this_author)
 
 
+############## authors ###################
+@app.route('/authors/add', methods=['GET', 'POST'])
+def add_author():
+    if request.method == 'POST':
+        try:
+            url_photo = upload_file()
+            photo_id = o.add_photo(url=url_photo)
+            o.add_author(name=request.form['name'], inf=request.form['inf'], saying=request.form['saying'],
+                         facebook=request.form['facebook'], twitter=request.form['twitter'], photo_id=photo_id)
+            return redirect(url_for('home'))
+        except:
+            return redirect(request.url)
+    elif request.method == 'GET':
+        return render_template('add_author.html')
+
 @app.route('/authors/update/<int:id>', methods=['GET', 'POST'])
 def update_author(id):
     if request.method == 'POST':
@@ -231,8 +237,6 @@ def update_author(id):
             return redirect(url_for('home'))
         except:
             return redirect(request.url)
-
-
     elif request.method == 'GET':
         context = o.get_author_by_id(id)
         return render_template('update_author.html', author=context)
