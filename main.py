@@ -22,11 +22,12 @@ db = SQLAlchemy(app)
 class Authors(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(70), nullable=False, unique=True)
+    password = db.Column(db.String(50), nullable=False)
     inf = db.Column(db.Text)
     # photo_back_url = db.Column(db.Text)
     saying = db.Column(db.Text)
     facebook = db.Column(db.Text)
-    twitter = db.Column(db.Text)
     articles = db.relationship('Articles', backref='author')
     photo_id = db.Column(db.Integer, db.ForeignKey('photos.id'))
 
@@ -46,7 +47,7 @@ class Articles(db.Model):
 
 class Photos(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    url = db.Column(db.Text, nullable=False, unique=True)
+    url = db.Column(db.Text, nullable=False)
     author = db.relationship('Authors', backref='photo')
 
 
@@ -57,9 +58,9 @@ class operations():
     # This operations which control the tables
 
     # AUTHORS
-    def add_author(self, name, inf='', saying='', facebook='', twitter='', photo_id=None):
-        author = Authors(name=name, inf=inf, saying=saying,
-                         facebook=facebook, twitter=twitter, photo_id=photo_id)
+    def add_author(self, name, email, password, inf='', saying='', facebook='', photo_id=None):
+        author = Authors(name=name, email=email, password=password, inf=inf, saying=saying,
+                         facebook=facebook, photo_id=photo_id)
         db.session.add(author)
         db.session.commit()
         return author.id
@@ -73,13 +74,14 @@ class operations():
     def get_author_by_name(self, name):
         return Authors.query.filter(Authors.name == name).first()
 
-    def update_author(self, id, name, inf, saying, facebook, twitter):
+    def update_author(self, id, name,email, password, inf, saying, facebook):
         author = self.get_author_by_id(id)
         author.name = name
+        author.email = email
+        author.password = password
         author.inf = inf
         author.saying = saying
         author.facebook = facebook
-        author.twitter = twitter
         db.session.commit()
 
     # ARTICLES
@@ -212,9 +214,11 @@ def add_author():
         try:
             url_photo = upload_file()
             photo_id = o.add_photo(url=url_photo)
-            o.add_author(name=request.form['name'], inf=request.form['inf'], saying=request.form['saying'],
-                         facebook=request.form['facebook'], twitter=request.form['twitter'], photo_id=photo_id)
-            return redirect(url_for('home'))
+            outhor_id = o.add_author(name=request.form['name'], email=request.form['email'],
+                         password=request.form['password'], inf=request.form['inf'],
+                         saying=request.form['saying'], facebook=request.form['facebook'],
+                         photo_id=photo_id)
+            return redirect(url_for('home',id=outhor_id,name=request.form['name']))
         except:
             return redirect(request.url)
     elif request.method == 'GET':
@@ -232,14 +236,20 @@ def update_author(id):
                 if path.exists(last_url):
                     remove(last_url)
                 o.update_photo(id=photo_id, url=url_photo)
-            o.update_author(id=id, name=request.form['name'], inf=request.form['inf'], saying=request.form['saying'],
-                            facebook=request.form['facebook'], twitter=request.form['twitter'])
+            o.update_author(id=id, name=request.form['name'], email=request.form['email'],
+                            password=request.form['password'], inf=request.form['inf'],
+                            saying=request.form['saying'], facebook=request.form['facebook'])
             return redirect(url_for('home'))
         except:
             return redirect(request.url)
     elif request.method == 'GET':
         context = o.get_author_by_id(id)
         return render_template('update_author.html', author=context)
+
+@app.route('/hello<int:id>/<string:name>')
+def message(id,name):
+    return ('<p>أهلاً {} سيتم تحويلك إلى الصفحة الرئيسية</p>'.format(name))
+
 
 
 app.run()

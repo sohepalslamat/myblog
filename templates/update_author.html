@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,600" rel="stylesheet">
+    <script src="{{url_for('static', filename='js/myscript.js')}}"></script>
     <link href="style.css" rel="stylesheet">
     <title>Update Author | MyBlog</title>
 </head>
@@ -16,10 +17,18 @@
         <h2>Update Author</h2>
 </header>
 <main id="add-section">
-<form action="{{url_for('update_author',id=author.id)}}" method="POST" enctype="multipart/form-data">
+<form onchange="check()" onmousemove="check()" action="{{url_for('update_author',id=author.id)}}" method="POST" enctype="multipart/form-data">
     <div>
-        <label>Name:</label>
-        <input type="text" name="name" value="{{author.name}}">
+        <label>Name: <sub style="color:red;">*</sub></label>
+        <input onkeypress="check()" type="text" name="name" value="{{author.name}}">
+    </div>
+    <div>
+        <label>Email: <sub style="color:red;">*</sub></label>
+        <input onkeypress="check()" type="email" name="email" value="{{author.email}}">
+    </div>
+    <div>
+        <label>Password: <sub style="color:red;">*</sub></label>
+        <input onkeypress="check()" type='password' name="password" value="">
     </div>
     <div>
         <label>Inf:</label>
@@ -27,7 +36,7 @@
     </div>
     <div>
         <label>Choose photo to upload:</label>
-        <input type="file" name="photo_url"  accept="image/png, image/jpeg,image/*" >
+        <input type="file" name="photo_url"  accept="" >
     </div>
 
     <div>
@@ -38,13 +47,9 @@
         <label>Facebook:</label>
         <input type="text" name="facebook" value="{{author.facebook}}">
     </div>
-    <div>
-        <label>Twitter:</label>
-        <input type="text" name="twitter" value="{{author.twitter}}">
-    </div>
 
     <div>
-                <button>Update</button>
+                <button disabled>Update</button>
     </div>
 </form>
 </main>

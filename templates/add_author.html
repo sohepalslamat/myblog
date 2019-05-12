@@ -7,6 +7,7 @@
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,600" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
+    <script src="{{url_for('static', filename='js/myscript.js')}}"></script>
     <title>Add Author | MyBlog</title>
 </head>
 <body>
@@ -16,10 +17,18 @@
         <h2>New Author</h2>
 </header>
 <main id="add-section">
-<form action="{{url_for('add_author')}}" method="POST" enctype="multipart/form-data">
+<form onchange="check()" onmousemove="check()"  action="{{url_for('add_author')}}" method="POST" enctype="multipart/form-data">
     <div>
-        <label>Name:</label>
-        <input type="text" name="name" value="">
+        <label>Name: <sub style="color:red;">*</sub></label>
+        <input onkeypress="check()" type="text" name="name" value="">
+    </div>
+    <div>
+        <label>Email: <sub style="color:red;">*</sub></label>
+        <input onkeypress="check()" type="email" name="email" value="">
+    </div>
+    <div>
+        <label>Password: <sub style="color:red;">*</sub></label>
+        <input onkeypress="check()" type='password' name="password" value="">
     </div>
     <div>
         <label>Inf:</label>
@@ -27,7 +36,7 @@
     </div>
     <div>
         <label>Choose photo to upload:</label>
-        <input type="file" name="photo_url" value="" accept="image/png, image/jpeg" >
+        <input type="file" name="photo_url" value="" accept="" >
     </div>
 
     <div>
@@ -38,14 +47,11 @@
         <label>Facebook:</label>
         <input type="text" name="facebook" value="">
     </div>
-    <div>
-        <label>Twitter:</label>
-        <input type="text" name="twitter" value="">
-    </div>
 
     <div>
-                <button>Create</button>
+                <button disabled >Create</button>
     </div>
+
 </form>
 </main>
 </body>
