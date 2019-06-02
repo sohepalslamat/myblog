@@ -161,3 +161,39 @@ article div div {margin: 20px;}
 .disable_button {
 background-color: #D8D8D8;
 }
+
+/* # message */
+
+#message-section {
+    padding: 40px;
+    background-color:#BCF4D1;
+}
+
+.name {
+   text-align: center;
+   width: 300px;
+   height: 50px;
+   text-shadow: -5px 5px 7px black;
+   border-radius: 50px;
+   color: #FE642E;
+   background-color: #90926570;
+   margin: 20px auto;
+   }
+.flash {
+    text-align: center;
+    width: 300px;
+    height: 50px;
+    text-shadow: -5px 5px 7px black;
+    border-radius: 50px;
+    color: #FE642E;
+    background-color: #a7ca6e70;
+    margin: 20px auto;
+
+}
+
+#message-section p:first-of-type {
+    text-align: center;
+   color: #2E9AFE;
+   font-size: 21px;
+}
+

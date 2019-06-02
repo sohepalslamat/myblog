@@ -54,7 +54,7 @@ class Photos(db.Model):
 db.create_all()
 
 
-class operations():
+class operations:
     # This operations which control the tables
 
     # AUTHORS
@@ -218,7 +218,7 @@ def add_author():
                          password=request.form['password'], inf=request.form['inf'],
                          saying=request.form['saying'], facebook=request.form['facebook'],
                          photo_id=photo_id)
-            return redirect(url_for('home',id=outhor_id,name=request.form['name']))
+            return redirect(url_for('message',id=outhor_id,name=request.form['name']))
         except:
             return redirect(request.url)
     elif request.method == 'GET':
@@ -248,7 +248,7 @@ def update_author(id):
 
 @app.route('/hello<int:id>/<string:name>')
 def message(id,name):
-    return ('<p>أهلاً {} سيتم تحويلك إلى الصفحة الرئيسية</p>'.format(name))
+    return render_template('message.html',name=name)
 
 
 
